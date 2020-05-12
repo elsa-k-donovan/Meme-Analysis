@@ -15,7 +15,7 @@ print('opened file')
 #use pandas read_csv, only read Signed URl col
 df = pd.read_csv(path, delimiter="\t", usecols=["Signed URL"], encoding="utf-16")
 
-#file path to where the downloaded file should go
+#file path to where the downloaded file will go
 finalSavePath = '/.../'
 
 
