@@ -8,7 +8,7 @@ import re
 path = 'links.tsv'
 print('opened file')
 
-#col_list to be replaced by named of the columns to show
+#col_list to be replaced by names of the columns to show
 #col_list = ["URL","HTTP","Signed URL"]
 
 
