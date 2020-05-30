@@ -11,7 +11,7 @@
 - [Installation](#installation)
 - [Scrape Memes](#features)
 - [Extract Metadata](#team)
-- [Image Clustering] (#clustering)
+- [Image Clustering](#clustering)
 - [FAQ](#faq)
 - [Support](#support)
 - [License](#license)
