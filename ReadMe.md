@@ -38,6 +38,7 @@ $ brew install pandas
   >EXIF, IPTC, 8BIM, ICC
 ## Image Clustering
 
+---
 Python scripts included were used to parse data from csv and tsv files. 
 
 Memes Pipeline project cloned from @zsavvas
