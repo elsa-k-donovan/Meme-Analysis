@@ -9,9 +9,9 @@
 ## Table of Contents
 
 - [Installation](#installation)
-- [Scrape Memes](#features)
-- [Extract Metadata](#team)
-- [Image Clustering](#clustering)
+- [Scrape Memes](#scrape)
+- [Extract Metadata](#extract)
+- [Image Clustering](#image)
 - [FAQ](#faq)
 - [Support](#support)
 - [License](#license)
@@ -31,7 +31,12 @@
 $ brew update
 $ brew install pandas
 ```
-
+---
+## Features
+## Scrape Memes
+## Extract Metadata
+  >EXIF, IPTC, 8BIM, ICC
+## Image Clustering
 
 Python scripts included were used to parse data from csv and tsv files. 
 
