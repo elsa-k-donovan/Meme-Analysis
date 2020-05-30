@@ -16,13 +16,13 @@
 - [License](#license)
 
 
+
+
 ## Installation
 
 - Python 3.6 or higher
 
 ### Setup
-
-- If you want more syntax highlighting, format your code like this:
 
 > update and install this package first
 
