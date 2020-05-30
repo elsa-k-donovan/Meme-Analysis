@@ -20,6 +20,16 @@
 
 - Python 3.6 or higher
 
+### Setup
+
+- If you want more syntax highlighting, format your code like this:
+
+> update and install this package first
+
+```shell
+$ brew update
+$ brew install pandas
+```
 
 
 Python scripts included were used to parse data from csv and tsv files. 
