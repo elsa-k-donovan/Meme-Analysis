@@ -9,8 +9,9 @@
 ## Table of Contents
 
 - [Installation](#installation)
-- [Features](#features)
-- [Team](#team)
+- [Scrape Memes](#features)
+- [Extract Metadata](#team)
+- [Image Clustering] (#clustering)
 - [FAQ](#faq)
 - [Support](#support)
 - [License](#license)
