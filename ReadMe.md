@@ -6,6 +6,22 @@
 
 [![Build Status](http://img.shields.io/travis/badges/badgerbadgerbadger.svg?style=flat-square)](https://travis-ci.org/badges/badgerbadgerbadger)
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Features](#features)
+- [Team](#team)
+- [FAQ](#faq)
+- [Support](#support)
+- [License](#license)
+
+
+## Installation
+
+- Python 3.6 or higher
+
+
+
 Python scripts included were used to parse data from csv and tsv files. 
 
 Memes Pipeline project cloned from @zsavvas
