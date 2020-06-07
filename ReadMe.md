@@ -36,9 +36,11 @@ $ brew install pandas
 ## Scrape Memes
 ## Extract Metadata
   >EXIF, IPTC, 8BIM, ICC
+  >Add user-defined tags in the exiftool_config file for exiftool. 
+  ![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/exiftool_config.png)
 ## Image Clustering
 
-![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/exiftool_config.png)
+
 
 ---
 Python scripts included were used to parse data from csv and tsv files. 
