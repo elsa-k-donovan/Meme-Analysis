@@ -38,6 +38,8 @@ $ brew install pandas
   >EXIF, IPTC, 8BIM, ICC
 ## Image Clustering
 
+![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/exiftool_config.png)
+
 ---
 Python scripts included were used to parse data from csv and tsv files. 
 
