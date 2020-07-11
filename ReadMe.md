@@ -56,7 +56,7 @@ Memes Pipeline project cloned from @zsavvas
 - download ofxJSON and add it to your addons folder for openframeworks.
 - change tsnePath in file to that of your JSON which has your coordinate points and your image filepaths.
 
-If any weird errors show up remember to use "Clean DEBUG" command. That solves most small issues. 
+> If any weird errors show up remember to use "Clean DEBUG" command. That solves most small issues. 
 
 
 ---
