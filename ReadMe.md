@@ -52,7 +52,7 @@ Memes Pipeline project cloned from @zsavvas
 
 ### Meme Viewer
 
-Built on OpenFrameworks.
+> Using OpenFrameworks for Mac v0.10.0
 
 
 
