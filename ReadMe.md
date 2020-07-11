@@ -53,6 +53,7 @@ Memes Pipeline project cloned from @zsavvas
 ## Meme Viewer
 
 > Using OpenFrameworks for Mac v0.11.0 Using the Visual Studio Code template, which is only available in v0.11.0.
+- change tsnePath in file to that of your JSON which has your coordinate points and your image filepaths.
 
 
 ---
