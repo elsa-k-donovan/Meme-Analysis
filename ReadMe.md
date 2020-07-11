@@ -57,6 +57,7 @@ Memes Pipeline project cloned from @zsavvas
 - change tsnePath in file to that of your JSON which has your coordinate points and your image filepaths.
 
 > If any weird errors show up remember to use "Clean DEBUG" command. That solves most small issues. 
+> If any additional openFrameworks error occur, open the c_cpp_properties.json file and make sure all paths are correct.
 
 
 ---
