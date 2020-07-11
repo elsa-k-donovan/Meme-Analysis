@@ -52,7 +52,7 @@ Memes Pipeline project cloned from @zsavvas
 
 ## Meme Viewer
 
-> Using OpenFrameworks for Mac v0.10.0
+> Using OpenFrameworks for Mac v0.11.0 Using the Visual Studio Code template, which is only available in v0.11.0.
 
 
 ---
