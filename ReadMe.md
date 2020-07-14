@@ -40,6 +40,7 @@ $ brew install pandas
   > Add user-defined tags in the exiftool_config file for exiftool. 
   
   ![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/exiftool_config.png)
+  - There will be an additional metadata tag "Platform" which will be added to all images used in the Meme Viewer. This will be used to easily distinguish which memes came from which platform. 
   - After this, run the [get_img_metadata.py](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/get_img_metadata.py) to import the metadata of images in a directory into a new csv file.
 ## Image Clustering
 
