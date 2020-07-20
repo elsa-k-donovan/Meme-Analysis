@@ -12,6 +12,8 @@
 - [Scrape Memes](#scrape)
 - [Extract Metadata](#extract)
 - [Image Clustering](#image)
+- [OCR](#ocr)
+- [Meme Viewer](#meme)
 - [FAQ](#faq)
 - [Support](#support)
 - [License](#license)
