@@ -56,6 +56,7 @@ Memes Pipeline project cloned from @zsavvas
 ## Meme Viewer
 
 > Using OpenFrameworks for Mac v0.11.0 Using the Visual Studio Code template, which is only available in v0.11.0.
+> Later opened my project in the OpenFrameworks v0.10.0 in order to fix an ofxJSON compatibility issue.
 - download ofxJSON and add it to your addons folder for openframeworks.
 - change tsnePath in file to that of your JSON which has your coordinate points and your image filepaths.
 
