@@ -63,7 +63,5 @@ Memes Pipeline project cloned from @zsavvas
 > If any additional openFrameworks error occur, open the c_cpp_properties.json file and make sure all paths are correct.
 > Code --> Preferences --> Settings --> C++
 
-7/11/20 - Too many issues with openFrameworks and Visual Studio Code. Downloading Xcode.
-
 ---
 
