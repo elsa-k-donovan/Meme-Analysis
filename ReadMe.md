@@ -24,6 +24,9 @@
 ## Installation
 
 - Python 3.6 or higher
+- miniconda3
+- tensorflow==2.0.0
+
 
 ### Setup
 
