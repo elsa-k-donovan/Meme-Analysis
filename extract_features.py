@@ -1,9 +1,8 @@
 # Built by referencing 'image-search.ipynb' by Gene Kogan
-
 import os
 import keras
 from keras.preprocessing import image
-from keras.applications.imagenet_utils import preprocess_input
+from keras.applications.imagenet_utils import preprocess_input, decode_predictions
 from keras.models import Model
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,6 +11,9 @@ from sklearn.decomposition import PCA
 import random
 from scipy.spatial import distance
 import pickle
+import json
+from PIL import Image
+from sklearn.manifold import TSNE
 
 #from google.colab import drive
 #drive.mount('/content/gdrive', force_remount=True)
@@ -28,11 +30,14 @@ def load_image(path):
     x = preprocess_input(x)
     return img, x
 
+# feature_extractor is the new name of feature extraction layer.
 feat_extractor = Model(inputs=model.input, outputs=model.get_layer("fc2").output)
+
+#Show details
 feat_extractor.summary()
 
 # Step 1: Change this to your file path.
-images_path = "/Volumes/External_HD/memes"
+images_path = "/Volumes/Elsa_HD2/memes-beta"
 
 # Step 2: Choose image formats.
 image_extensions = ['.jpg', '.png', '.jpeg', '.gif']   # case-insensitive (upper/lower doesn't matter)
@@ -52,10 +57,10 @@ for i, image_path in enumerate(images):
         print("analyzing image %d / %d. Time: %4.4f seconds." % (i, len(images),elap))
         tic = time.perf_counter()
     try:
-        # removed img, x
-        x = load_image(image_path)
+        img, x = load_image(image_path)
     except Exception as ex1:
         print("Problem with file, may be corrupted.")
+    # retrieve the feature vector of each image
     feat = feat_extractor.predict(x)[0]
     features.append(feat)
 
@@ -76,7 +81,7 @@ query_image_idx = int(len(images) * random.random())
 # img = image.load_img(images[query_image_idx])
 # plt.imshow(img)
 
-similar_idx = [ distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
+similar_idx = [distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
 
 idx_closest = sorted(range(len(similar_idx)), key=lambda k: similar_idx[k])[1:6]
 
@@ -91,8 +96,8 @@ for idx in idx_closest:
 concat_image = np.concatenate([np.asarray(t) for t in thumbs], axis=1)
 
 # show the image
-plt.figure(figsize=(16,12))
-plt.imshow(concat_image)
+# plt.figure(figsize=(16,12))
+# plt.imshow(concat_image)
 
 def get_closest_images(query_image_idx, num_results=5):
     distances = [ distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
@@ -120,9 +125,56 @@ plt.imshow(query_image)
 plt.title("query image (%d)" % query_image_idx)
 
 # display the resulting images
-plt.figure(figsize = (16,12))
+plt.figure(figsize=(16,12))
 plt.imshow(results_image)
 plt.title("result images")
 
 #Save PCA-reduced features and array of images as a file using pickle
-pickle.dump([images, pca_features, pca], open('/Volumes/External_HD/memes/memes_features.p', 'wb'))
+pickle.dump([images, pca_features, pca], open('/Volumes/Elsa_HD2/memes-beta/memes_beta_features.p', 'wb'))
+
+
+#new file
+
+images, pca_features, pca = pickle.load(open('/Volumes/Elsa_HD2/memes-beta/memes_beta_features.p', 'rb'))
+
+for img, f in list(zip(images, pca_features))[0:5]:
+    print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
+
+#num_images_to_plot = 1000
+
+# if len(images) > num_images_to_plot:
+#     sort_order = sorted(random.sample(range(len(images)), num_images_to_plot))
+#     images = [images[i] for i in sort_order]
+#     pca_features = [pca_features[i] for i in sort_order]
+
+X = np.array(pca_features)
+tsne = TSNE(n_components=2, learning_rate=150, perplexity=30, angle=0.2, verbose=2).fit_transform(X)
+
+tx, ty = tsne[:,0], tsne[:,1]
+tx = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
+ty = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
+
+width = 4000
+height = 3000
+max_dim = 100
+
+full_image = Image.new('RGBA', (width, height))
+for img, x, y in zip(images, tx, ty):
+    tile = Image.open(img)
+    rs = max(1, tile.width/max_dim, tile.height/max_dim)
+    tile = tile.resize((int(tile.width/rs), int(tile.height/rs)), Image.ANTIALIAS)
+    full_image.paste(tile, (int((width-max_dim)*x), int((height-max_dim)*y)), mask=tile.convert('RGBA'))
+
+plt.figure(figsize=(16,12))
+
+# Uncomment for saved image of tsne-map
+#full_image.save("example-tSNE-all_reddit.png")
+
+# Save coordinates to JSON file for visualization.
+tsne_path = "memes-beta-features.json"
+
+data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
+with open(tsne_path, 'w') as outfile:
+    json.dump(data, outfile)
+
+print("saved t-SNE result to %s" % tsne_path)
