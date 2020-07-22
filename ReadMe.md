@@ -48,6 +48,7 @@ $ brew install pandas
 ## Image Clustering
 
 I'm using Tensorflow 2 with the Keras API to make image classification predictions on the meme images. 
+Run extract-features.py
 
 
 Python scripts included were used to parse data from csv and tsv files. 
