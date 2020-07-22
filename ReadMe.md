@@ -47,7 +47,7 @@ $ brew install pandas
   - After this, run the [get_img_metadata.py](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/get_img_metadata.py) to import the metadata of images in a directory into a new csv file.
 ## Image Clustering
 
-
+I'm using Tensorflow 2 with the Keras API to make image classification predictions on the meme images. 
 
 
 Python scripts included were used to parse data from csv and tsv files. 
