@@ -168,10 +168,10 @@ for img, x, y in zip(images, tx, ty):
 plt.figure(figsize=(16,12))
 
 # Uncomment for saved image of tsne-map
-full_image.save("example-tSNE-all_reddit.png")
+full_image.save("OG_example-tSNE-all_reddit.png")
 
 # Save coordinates to JSON file for visualization.
-tsne_path = "memes-beta-features.json"
+tsne_path = "OG_memes-beta-features.json"
 
 data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
 with open(tsne_path, 'w') as outfile:
