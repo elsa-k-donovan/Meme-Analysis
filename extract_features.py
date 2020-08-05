@@ -37,7 +37,7 @@ feat_extractor = Model(inputs=model.input, outputs=model.get_layer("fc2").output
 feat_extractor.summary()
 
 # Step 1: Change this to your file path.
-images_path = "/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data"
+images_path = "/Volumes/Elsa_HD2/memes-beta"
 
 # Step 2: Choose image formats.
 image_extensions = ['.jpg', '.png', '.jpeg', '.gif']   # case-insensitive (upper/lower doesn't matter)
@@ -53,7 +53,7 @@ features = []
 for i, image_path in enumerate(images):
     if i % 500 == 0:
         toc = time.perf_counter()
-        elap = toc-tic
+        elap = toc-tic;
         print("analyzing image %d / %d. Time: %4.4f seconds." % (i, len(images),elap))
         tic = time.perf_counter()
     try:
@@ -78,8 +78,8 @@ pca_features = pca.transform(features)
 query_image_idx = int(len(images) * random.random())
 
 # let's display the image
-img = image.load_img(images[query_image_idx])
-plt.imshow(img)
+# img = image.load_img(images[query_image_idx])
+# plt.imshow(img)
 
 similar_idx = [distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
 
@@ -96,8 +96,8 @@ for idx in idx_closest:
 concat_image = np.concatenate([np.asarray(t) for t in thumbs], axis=1)
 
 # show the image
-plt.figure(figsize=(16,12))
-plt.imshow(concat_image)
+# plt.figure(figsize=(16,12))
+# plt.imshow(concat_image)
 
 def get_closest_images(query_image_idx, num_results=5):
     distances = [ distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
@@ -130,12 +130,12 @@ plt.imshow(results_image)
 plt.title("result images")
 
 #Save PCA-reduced features and array of images as a file using pickle
-pickle.dump([images, pca_features, pca], open(images_path + '/memes_beta_features.p', 'wb'))
+pickle.dump([images, pca_features, pca], open('/Volumes/Elsa_HD2/memes-beta/memes_beta_features.p', 'wb'))
 
 
 #new file
 
-images, pca_features, pca = pickle.load(open(images_path + '/memes_beta_features.p', 'rb'))
+images, pca_features, pca = pickle.load(open('/Volumes/Elsa_HD2/memes-beta/memes_beta_features.p', 'rb'))
 
 for img, f in list(zip(images, pca_features))[0:5]:
     print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
@@ -168,10 +168,10 @@ for img, x, y in zip(images, tx, ty):
 plt.figure(figsize=(16,12))
 
 # Uncomment for saved image of tsne-map
-full_image.save("OG_example-tSNE-all_reddit.png")
+#full_image.save("example-tSNE-all_reddit.png")
 
 # Save coordinates to JSON file for visualization.
-tsne_path = "OG_memes-beta-features.json"
+tsne_path = "memes-beta-features.json"
 
 data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
 with open(tsne_path, 'w') as outfile:
