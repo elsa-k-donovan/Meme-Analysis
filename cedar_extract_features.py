@@ -180,9 +180,7 @@ with zipfile.ZipFile(path_zip, 'r') as zip_ref:
     #Save PCA-reduced features and array of images as a file using pickle
     pickle.dump([images_zip, pca_features, pca], open(images_path + '/memes_beta_features.p', 'wb'))
 
-    print("Made it!!")
     #new file
-
     images_zip, pca_features, pca = pickle.load(open(images_path + '/memes_beta_features.p', 'rb'))
 
     for img, f in list(zip(images_zip, pca_features))[0:5]:
