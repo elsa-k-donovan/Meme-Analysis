@@ -79,8 +79,8 @@ with zipfile.ZipFile(path_zip, 'r') as zip_ref:
 
 
         try:
-            num_loops = x + 20
-            #x = 0
+            num_loops = x + imgs_per_extraction
+            
             while x < num_loops:
 
                 path_of_file = listOfFileNames[x]
