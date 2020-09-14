@@ -10,16 +10,16 @@ import ntpath
 # Change all of the paths and variables in this section
 # for batch processing on Cedar.
 
-root_path = "Volumes/Elsa_HD2/Memes/"
+root_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections/twitter"
 
 # path to zip file
-path_zip = "/Volumes/Elsa_HD2/Memes/fb_test.zip"
-path_zip_dest = "/Volumes/Elsa_HD2/Memes/Twitter/Results"
+path_zip = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_fixed.zip"
+path_zip_dest = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections/twitter/Results"
 
 # path to csv
-path_csv = "/Volumes/Elsa_HD2/Memes/Twitter/twitter_filenames.csv"
+path_csv = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_filenames.csv"
 
-name_of_zip = "fb_test"
+name_of_zip = "twitter_fixed"
 
 imgs_per_extraction = 100,000
 max_imgs_per_folder = 100,000
