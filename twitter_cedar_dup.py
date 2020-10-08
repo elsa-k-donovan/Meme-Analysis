@@ -13,20 +13,17 @@ import ntpath
 #root_path = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter"
 
 # path to zip file
-#path_zip = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_fixed.zip"
-path_zip = "/Volumes/Elsa_HD2/Memes/fb_test.zip"
+path_zip = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_fixed.zip"
 
-#path_zip_dest = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/Results"
-path_zip_dest = "/Volumes/Elsa_HD2/Memes/Twitter/Results"
+path_zip_dest = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/Results"
+
 #path_zip_dir = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_fixed/"
 
 # path to csv
-#path_csv = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_filenames.csv"
+path_csv = "/home/edonovan/projects/def-whkchun/memes/images/CA_2019Elections/twitter/twitter_filenames.csv"
 
-path_csv = "/Volumes/Elsa_HD2/Memes/Twitter/twitter_filenames.csv"
-
-zip_name = "fb_test"
-max_imgs_per_folder = 1
+zip_name = "twitter_fixed"
+max_imgs_per_folder = 100000
 
 ###########################################################################
 
@@ -55,8 +52,6 @@ with zipfile.ZipFile(path_zip, 'r') as zip_ref:
 
     #iterate through cols.values
     for file in cols.values:
-        #filename_path = path_zip_dir + file
-        #print(filename_path)
 
         try:
             full_file = str(zip_name) + "/" + str(file)
