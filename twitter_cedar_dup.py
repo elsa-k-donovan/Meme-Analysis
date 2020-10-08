@@ -60,6 +60,7 @@ with zipfile.ZipFile(path_zip, 'r') as zip_ref:
             # It can't process the zip_ref.read(full_file).
             # I have tried to change the full_file to just be the file name and not the 'str(zip_name) + "/"' part before.
             # Nothing has worked so far. 
+            # It's able to iterate through the entire CSV successfully. Just the ZipFile commands don't work.
             zip_ref.read(full_file)
             
             if files_moved_count < max_imgs_per_folder:
