@@ -55,7 +55,13 @@ with zipfile.ZipFile(path_zip, 'r') as zip_ref:
 
         try:
             full_file = str(zip_name) + "/" + str(file)
+            
+            # ISSUE on CEDAR begins here. The error message is always: line 10: /home/edonovan : is a directory
+            # It can't process the zip_ref.read(full_file).
+            # I have tried to change the full_file to just be the file name and not the 'str(zip_name) + "/"' part before.
+            # Nothing has worked so far. 
             zip_ref.read(full_file)
+            
             if files_moved_count < max_imgs_per_folder:
                 try:
                     zip_ref.extract(full_file, dest_dir_path)
