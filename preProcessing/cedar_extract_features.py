@@ -5,11 +5,8 @@ from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input, decode_predictions
 from keras.models import Model
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 from sklearn.decomposition import PCA
-import random
-from scipy.spatial import distance
 import pickle
 import json
 from PIL import Image
@@ -72,7 +69,7 @@ def proccess_images(zip_loc, dest_loc, model):
     # print('finished extracting features for %d images' % len(images_zip))
     return features, images_zip
 
-
+time.sleep(10)
 
 # Step 1: Change this to your file path.
 # # personal
@@ -80,7 +77,7 @@ def proccess_images(zip_loc, dest_loc, model):
 # dec_loc = images_path
 # cedar
 images_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections"
-dec_loc = "/home/htabesh/scratch/data"
+dec_loc = "/home/htabesh/scratch/data/"
 
 #Research the different models and weights.
 model = keras.applications.VGG16(weights='imagenet', include_top=True)
@@ -95,7 +92,11 @@ feat_extractor.summary()
 # Step 2: Choose image formats.
 image_extensions = ['.jpg', '.png', '.jpeg', '.gif']   # case-insensitive (upper/lower doesn't matter)
 
-zips = [os.path.join(dp, f) for dp, dn, filenames in os.walk(images_path) for f in filenames if os.path.splitext(f)[1].lower() == ".zip" and not "twitter" in f]
+zips_temp = [os.path.join(dp, f) for dp, dn, filenames in os.walk(images_path) for f in filenames if os.path.splitext(f)[1].lower() == ".zip"]
+zips = []
+for temp_i in zips_temp:
+    if 'twitter' in temp_i:
+        zips.append()
 
 print("keeping %d zips to analyze" % len(zips))
 print(zips)
@@ -106,7 +107,7 @@ threads = []
 return_value = []
 with concurrent.futures.ThreadPoolExecutor() as executor:
     # lets create a thread per zip
-    for zip_i in zips[0:1]:
+    for zip_i in zips:
         threads.append(executor.submit(proccess_images, zip_i, dec_loc, feat_extractor))
     # lets get the return value of each thread
     for thread_i in threads:
@@ -126,106 +127,25 @@ pca.fit(features)
 
 pca_features = pca.transform(features)
 
-# grab a random query image
-# query_image_idx = int(len(images) * random.random())
-
-# let's display the image
-# img = image.load_img(images[query_image_idx])
-# plt.imshow(img)
-
-# similar_idx = [distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
-
-# idx_closest = sorted(range(len(similar_idx)), key=lambda k: similar_idx[k])[1:6]
-
-# # load all the similarity results as thumbnails of height 100
-# thumbs = []
-# for idx in idx_closest:
-#     img = image.load_img(images[idx])
-#     img = img.resize((int(img.width * 100 / img.height), 100))
-#     thumbs.append(img)
-
-# # concatenate the images into a single image
-# concat_image = np.concatenate([np.asarray(t) for t in thumbs], axis=1)
-
-# show the image
-# plt.figure(figsize=(16,12))
-# plt.imshow(concat_image)
-
-# def get_closest_images(query_image_idx, num_results=5):
-#     distances = [ distance.cosine(pca_features[query_image_idx], feat) for feat in pca_features ]
-#     idx_closest = sorted(range(len(distances)), key=lambda k: distances[k])[1:num_results+1]
-#     return idx_closest
-
-# def get_concatenated_images(indexes, thumb_height):
-#     thumbs = []
-#     for idx in indexes:
-#         img = image.load_img(images[idx])
-#         img = img.resize((int(img.width * thumb_height / img.height), thumb_height))
-#         thumbs.append(img)
-#     concat_image = np.concatenate([np.asarray(t) for t in thumbs], axis=1)
-#     return concat_image
-
-# # do a query on a random image
-# query_image_idx = int(len(images) * random.random())
-# idx_closest = get_closest_images(query_image_idx)
-# query_image = get_concatenated_images([query_image_idx], 300)
-# results_image = get_concatenated_images(idx_closest, 200)
-
-# # display the query image
-# plt.figure(figsize = (5,5))
-# plt.imshow(query_image)
-# plt.title("query image (%d)" % query_image_idx)
-
-# # display the resulting images
-# plt.figure(figsize=(16,12))
-# plt.imshow(results_image)
-# plt.title("result images")
-
 #Save PCA-reduced features and array of images as a file using pickle
-pickle.dump([images, pca_features, pca], open('/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data/Emillie_memes_features.p', 'wb'))
-
+pickle.dump([images, pca_features, pca], open(dec_loc + 'memes_features_partial.p', 'wb'))
 
 #new file
-images, pca_features, pca = pickle.load(open('/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data/Emillie_memes_features.p', 'rb'))
+images, pca_features, pca = pickle.load(open(dec_loc + 'memes_features_partial.p', 'rb'))
 
 for img, f in list(zip(images, pca_features))[0:5]:
     print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
 
-#num_images_to_plot = 1000
-
-# if len(images) > num_images_to_plot:
-#     sort_order = sorted(random.sample(range(len(images)), num_images_to_plot))
-#     images = [images[i] for i in sort_order]
-#     pca_features = [pca_features[i] for i in sort_order]
-
 X = np.array(pca_features)
 tsne = TSNE(n_components=2, learning_rate=150, perplexity=30, angle=0.2, verbose=2).fit_transform(X)
-
 
 tx, ty = tsne[:,0], tsne[:,1]
 tx_norm = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
 ty_norm = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
 
-# width = 4000
-# height = 3000
-# max_dim = 100
-
-# full_image = Image.new('RGBA', (width, height))
-# for img, x, y in zip(images, tx_norm, ty_norm):
-#     tile = Image.open(img)
-#     rs = max(1, tile.width/max_dim, tile.height/max_dim)
-#     tile = tile.resize((int(tile.width/rs), int(tile.height/rs)), Image.ANTIALIAS)
-#     full_image.paste(tile, (int((width-max_dim)*x), int((height-max_dim)*y)), mask=tile.convert('RGBA'))
-
-# plt.figure(figsize=(16,12))
-
-# # Uncomment for saved image of tsne-map
-# full_image.save("example-tSNE-all_Emillie_memes.png")
-
 # Save coordinates to JSON file for visualization.
-tsne_path_norm = "/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data/norm-memes-beta-features-partial.json"
-tsne_path = "/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data/memes-beta-features-partial.json"
-
+tsne_path_norm =  dec_loc + "norm-memes-beta-features-partial.json"
+tsne_path = dec_loc + "memes-beta-features-partial.json"
 
 data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx_norm, ty_norm)]
 with open(tsne_path_norm, 'w') as outfile:
@@ -234,6 +154,5 @@ with open(tsne_path_norm, 'w') as outfile:
 data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
 with open(tsne_path, 'w') as outfile:
     json.dump(data, outfile)
-
 
 print("saved t-SNE result to %s" % tsne_path)
