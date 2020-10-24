@@ -40,13 +40,13 @@ def proccess_images(zip_loc, dest_loc, model):
 
         tic = time.perf_counter()
 
-        for k in range(0, len(images_zip), 100000):
+        for k in range(0, len(images_zip), 20000):
             ## first lets extract and move the file we want
-            if k+100000 > len(images_zip):
+            if k+20000 > len(images_zip):
                 zip_ref.extractall(members=images_zip[k:len(images_zip)], path=dest_loc)
             else:
-                zip_ref.extractall(members=images_zip[k:k+100000], path=dest_loc)
-            #
+                zip_ref.extractall(members=images_zip[k:k+20000], path=dest_loc)
+            
             images = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dest_loc_with_zip_name) for f in filenames if os.path.splitext(f)[1].lower() in image_extensions and not f[0] == '.' ]
             for i, image_path in enumerate(images):
                 if i % 500 == 0:
