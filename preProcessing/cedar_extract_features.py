@@ -40,12 +40,12 @@ def proccess_images(zip_loc, dest_loc, model):
 
         tic = time.perf_counter()
 
-        for k in range(0, len(images_zip), 20000):
+        for k in range(0, len(images_zip), 10000):
             ## first lets extract and move the file we want
-            if k+20000 > len(images_zip):
+            if k+10000 > len(images_zip):
                 zip_ref.extractall(members=images_zip[k:len(images_zip)], path=dest_loc)
             else:
-                zip_ref.extractall(members=images_zip[k:k+20000], path=dest_loc)
+                zip_ref.extractall(members=images_zip[k:k+10000], path=dest_loc)
             
             images = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dest_loc_with_zip_name) for f in filenames if os.path.splitext(f)[1].lower() in image_extensions and not f[0] == '.' ]
             for i, image_path in enumerate(images):
@@ -64,7 +64,7 @@ def proccess_images(zip_loc, dest_loc, model):
             
             # lets remove the current images 
             print("Removing all files!")
-            os.system("rm -rfv " + dest_loc_with_zip_name)
+            os.system("rm -rf " + dest_loc_with_zip_name)
 
     # print('finished extracting features for %d images' % len(images_zip))
     return features, images_zip
@@ -77,7 +77,7 @@ time.sleep(10)
 # dec_loc = images_path
 # cedar
 images_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections"
-dec_loc = "/home/htabesh/scratch/data/"
+dec_loc = "/home/htabesh/scratch/data"
 
 #Research the different models and weights.
 model = keras.applications.VGG16(weights='imagenet', include_top=True)
@@ -128,10 +128,10 @@ pca.fit(features)
 pca_features = pca.transform(features)
 
 #Save PCA-reduced features and array of images as a file using pickle
-pickle.dump([images, pca_features, pca], open(dec_loc + 'memes_features_partial.p', 'wb'))
+pickle.dump([images, pca_features, pca], open(dec_loc + '/memes_features_full.p', 'wb'))
 
 #new file
-images, pca_features, pca = pickle.load(open(dec_loc + 'memes_features_partial.p', 'rb'))
+images, pca_features, pca = pickle.load(open(dec_loc + '/memes_features_full.p', 'rb'))
 
 for img, f in list(zip(images, pca_features))[0:5]:
     print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
@@ -144,8 +144,8 @@ tx_norm = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
 ty_norm = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
 
 # Save coordinates to JSON file for visualization.
-tsne_path_norm =  dec_loc + "norm-memes-beta-features-partial.json"
-tsne_path = dec_loc + "memes-beta-features-partial.json"
+tsne_path_norm =  dec_loc + "/norm-memes-beta-features-full.json"
+tsne_path = dec_loc + "/memes-beta-features-full.json"
 
 data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx_norm, ty_norm)]
 with open(tsne_path_norm, 'w') as outfile:
