@@ -12,7 +12,7 @@ import json
 from PIL import Image
 from sklearn.manifold import TSNE
 import zipfile
-import concurrent.futures
+# import concurrent.futures
 import pathlib
 
 def load_image(path):
@@ -40,12 +40,12 @@ def proccess_images(zip_loc, dest_loc, model):
 
         tic = time.perf_counter()
 
-        for k in range(0, len(images_zip), 10000):
+        for k in range(0, len(images_zip), 200000):
             ## first lets extract and move the file we want
-            if k+10000 > len(images_zip):
+            if k+200000 > len(images_zip):
                 zip_ref.extractall(members=images_zip[k:len(images_zip)], path=dest_loc)
             else:
-                zip_ref.extractall(members=images_zip[k:k+10000], path=dest_loc)
+                zip_ref.extractall(members=images_zip[k:k+200000], path=dest_loc)
             
             images = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dest_loc_with_zip_name) for f in filenames if os.path.splitext(f)[1].lower() in image_extensions and not f[0] == '.' ]
             for i, image_path in enumerate(images):
@@ -92,11 +92,7 @@ feat_extractor.summary()
 # Step 2: Choose image formats.
 image_extensions = ['.jpg', '.png', '.jpeg', '.gif']   # case-insensitive (upper/lower doesn't matter)
 
-zips_temp = [os.path.join(dp, f) for dp, dn, filenames in os.walk(images_path) for f in filenames if os.path.splitext(f)[1].lower() == ".zip"]
-zips = []
-for temp_i in zips_temp:
-    if 'twitter' in temp_i:
-        zips.append()
+zips = [os.path.join(dp, f) for dp, dn, filenames in os.walk(images_path) for f in filenames if os.path.splitext(f)[1].lower() == ".zip"]
 
 print("keeping %d zips to analyze" % len(zips))
 print(zips)
@@ -105,19 +101,22 @@ features = []
 images = []
 threads = []
 return_value = []
-with concurrent.futures.ThreadPoolExecutor() as executor:
-    # lets create a thread per zip
-    for zip_i in zips:
-        threads.append(executor.submit(proccess_images, zip_i, dec_loc, feat_extractor))
-    # lets get the return value of each thread
-    for thread_i in threads:
-        return_value.append(thread_i.result())
+# with concurrent.futures.ThreadPoolExecutor() as executor:
+    # # lets create a thread per zip
+for zip_i in zips:
+    return_value.append(proccess_images(zip_i, dec_loc, feat_extractor))
+    # threads.append(executor.submit(proccess_images, zip_i, dec_loc, feat_extractor))
+# # lets get the return value of each thread
+# for thread_i in threads:
+#     return_value.append(thread_i.result())
 
 
 for ret_i in return_value:
     features = features + ret_i[0]
     images = images + ret_i[1]
 
+print("length of features is " + str(len(features)))
+print("length of images is " + str(len(images)))
 
 features = np.array(features)
 
