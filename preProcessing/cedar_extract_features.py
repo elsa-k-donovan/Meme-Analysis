@@ -79,7 +79,7 @@ dec_loc = images_path
 # images_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections"
 # dec_loc = "/home/htabesh/scratch/data"
 
-file_name_suffix = "meme"
+file_name_suffix = "meme-v5"
 
 #Research the different models and weights.
 model = keras.applications.VGG16(weights='imagenet', include_top=True)
@@ -123,7 +123,7 @@ print("length of images is " + str(len(images)))
 features = np.array(features)
 
 #originally n_components=300
-pca = PCA(n_components=300)
+pca = PCA(n_components=.95)
 pca.fit(features)
 
 pca_features = pca.transform(features)
