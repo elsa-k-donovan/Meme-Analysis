@@ -6,7 +6,8 @@ from keras.applications.imagenet_utils import preprocess_input, decode_predictio
 from keras.models import Model
 import numpy as np
 import time
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import SparsePCA
+from sklearn.decomposition import TruncatedSVD
 import pickle
 import json
 from PIL import Image
@@ -14,6 +15,7 @@ from sklearn.manifold import TSNE
 import zipfile
 # import concurrent.futures
 import pathlib
+from scipy.sparse import csr_matrix ## for sparse matrix
 
 def load_image(path):
     img = image.load_img(path, target_size=model.input_shape[1:3])
@@ -23,7 +25,6 @@ def load_image(path):
     return img, x
 
 def proccess_images(zip_loc, dest_loc, model):
-    zip_name = os.path.basename(zip_loc)
     with zipfile.ZipFile(zip_loc, 'r') as zip_ref:
         # lets get a list of all files in zip
         listOfFileNames_temp = zip_ref.namelist()
@@ -61,6 +62,8 @@ def proccess_images(zip_loc, dest_loc, model):
                 # retrieve the feature vector of each image
                 feat = model.predict(x)[0]
                 features.append(feat)
+                # produces generator for future use <- 
+                # yield feat # <----- TODO: google 
             
             # lets remove the current images 
             print("Removing all files!")
@@ -73,13 +76,13 @@ time.sleep(10)
 
 # Step 1: Change this to your file path.
 # # personal
-images_path = "/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data"
-dec_loc = images_path
+# images_path = "/Users/hedayattabesh/Documents/scripts/Meme-Analysis/data"
+# dec_loc = images_path
 # cedar
-# images_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections"
-# dec_loc = "/home/htabesh/scratch/data"
+images_path = "/home/htabesh/projects/def-whkchun/memes/images/CA_2019Elections"
+dec_loc = "/home/htabesh/scratch/data"
 
-file_name_suffix = "meme-v5"
+file_name_suffix = "full"
 
 #Research the different models and weights.
 model = keras.applications.VGG16(weights='imagenet', include_top=True)
@@ -112,7 +115,6 @@ for zip_i in zips:
 # for thread_i in threads:
 #     return_value.append(thread_i.result())
 
-
 for ret_i in return_value:
     features = features + ret_i[0]
     images = images + ret_i[1]
@@ -120,40 +122,50 @@ for ret_i in return_value:
 print("length of features is " + str(len(features)))
 print("length of images is " + str(len(images)))
 
-features = np.array(features)
+# lets checkpoint it here
+with open(dec_loc + '/memes_checkpoint_features_' + file_name_suffix + '.txt', 'w') as f:
+    for item in features:
+        f.write("%s\n" % item)
+with open(dec_loc + '/memes_checkpoint_images_' + file_name_suffix + '.txt', 'w') as f:
+    for item in images:
+        f.write("%s\n" % item)
 
-#originally n_components=300
-pca = PCA(n_components=.95)
-pca.fit(features)
+# features = csr_matrix(features) # <- scipy
+# # <- TODO: make sparse matrix
+# # features = np.array(features)
 
-pca_features = pca.transform(features)
+# # csr sparse matrix
+# pca = TruncatedSVD(n_components=.95,random_state=0)
+# pca.fit(features)
 
-#Save PCA-reduced features and array of images as a file using pickle
-pickle.dump([images, pca_features, pca], open(dec_loc + '/memes_features_' + file_name_suffix + '.p', 'wb'))
+# pca_features = pca.transform(features)
 
-#new file
-images, pca_features, pca = pickle.load(open(dec_loc + '/memes_features_' + file_name_suffix + '.p', 'rb'))
+# #Save PCA-reduced features and array of images as a file using pickle
+# pickle.dump([images, pca_features, pca], open(dec_loc + '/memes_features_' + file_name_suffix + '.p', 'wb'))
 
-for img, f in list(zip(images, pca_features))[0:5]:
-    print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
+# #new file
+# images, pca_features, pca = pickle.load(open(dec_loc + '/memes_features_' + file_name_suffix + '.p', 'rb'))
 
-X = np.array(pca_features)
-tsne = TSNE(n_components=2, learning_rate=150, perplexity=30, angle=0.2, verbose=2).fit_transform(X)
+# for img, f in list(zip(images, pca_features))[0:5]:
+#     print("image: %s, features: %0.2f,%0.2f,%0.2f,%0.2f... "%(img, f[0], f[1], f[2], f[3]))
 
-tx, ty = tsne[:,0], tsne[:,1]
-tx_norm = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
-ty_norm = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
+# X = np.array(pca_features)
+# tsne = TSNE(n_components=2, learning_rate=150, perplexity=30, angle=0.2, verbose=2).fit_transform(X)
 
-# Save coordinates to JSON file for visualization.
-tsne_path_norm =  dec_loc + "/norm-memes-beta-features-" + file_name_suffix + ".json"
-tsne_path = dec_loc + "/memes-beta-features-" + file_name_suffix + ".json"
+# tx, ty = tsne[:,0], tsne[:,1]
+# tx_norm = (tx-np.min(tx)) / (np.max(tx) - np.min(tx))
+# ty_norm = (ty-np.min(ty)) / (np.max(ty) - np.min(ty))
 
-data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx_norm, ty_norm)]
-with open(tsne_path_norm, 'w') as outfile:
-    json.dump(data, outfile)
+# # Save coordinates to JSON file for visualization.
+# tsne_path_norm =  dec_loc + "/norm-memes-beta-features-" + file_name_suffix + ".json"
+# tsne_path = dec_loc + "/memes-beta-features-" + file_name_suffix + ".json"
 
-data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
-with open(tsne_path, 'w') as outfile:
-    json.dump(data, outfile)
+# data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx_norm, ty_norm)]
+# with open(tsne_path_norm, 'w') as outfile:
+#     json.dump(data, outfile)
 
-print("saved t-SNE result to %s" % tsne_path)
+# data = [{"path":os.path.abspath(img), "point":[float(x), float(y)]} for img, x, y in zip(images, tx, ty)]
+# with open(tsne_path, 'w') as outfile:
+#     json.dump(data, outfile)
+
+# print("saved t-SNE result to %s" % tsne_path)
