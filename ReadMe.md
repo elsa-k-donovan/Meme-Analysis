@@ -64,8 +64,9 @@ Python scripts included were used to parse data from csv and tsv files.
 
 > Using OpenFrameworks for Mac v0.11.0 Using the Visual Studio Code template, which is only available in v0.11.0.
 > 
->![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/openFrameworks/meme_viewer_still.png)
 > Later opened my project made with v0.11.0 in the downgraded OpenFrameworks v0.10.0 in order to fix an ofxJSON compatibility issue.
+![alt-text](https://github.com/elsa-k-donovan/Meme-Analysis/blob/master/openFrameworks/meme_viewer_still.png)
+
 - download ofxJSON and add it to your addons folder for openframeworks.
 - change tsnePath in file to that of your JSON which has your coordinate points and your image filepaths.
 
